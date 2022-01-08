@@ -13,9 +13,8 @@ public class UserLoanDetails {
   private Integer principal;
   private Integer term;
   private Integer rateOfInterest;
-  private Integer numberOfEMIs;
-  private Integer remainingTotalValue;
-  private Integer emi;
+  private Integer remainingAmount;
+  private Integer emiAmount;
   private LinkedHashMap<Integer, Integer> lumpSumPaymentTracker;
 
   public UserLoanDetails(String bank,
@@ -24,20 +23,23 @@ public class UserLoanDetails {
                          Integer term,
                          Integer rateOfInterest,
                          Integer totalValue,
-                         Integer emi,
-                         LinkedHashMap<Integer, Integer> lumpSumPaymentTracker
-                         ) {
+                         Integer emiAmount,
+                         LinkedHashMap<Integer, Integer> lumpSumPaymentTracker) {
     this.bank = bank;
     this.user = user;
     this.principal = principal;
     this.term = term;
     this.rateOfInterest = rateOfInterest;
-    this.remainingTotalValue = totalValue;
-    this.emi = emi;
+    this.remainingAmount = totalValue;
+    this.emiAmount = emiAmount;
     this.lumpSumPaymentTracker = lumpSumPaymentTracker;
   }
 
-  public Integer calculateTotalValue() {
+  public Integer calculateTotalAmount() {
     return Math.toIntExact(Math.round((principal*term*rateOfInterest)/100.0)) + principal;
+  }
+
+  public static String getUserBankIdentifier(String inputString1, String inputString2) {
+    return inputString1 + "_" + inputString2;
   }
 }

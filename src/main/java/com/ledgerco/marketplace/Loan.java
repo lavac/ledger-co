@@ -6,20 +6,20 @@ import java.util.Map;
 public class Loan extends Command {
 
   @Override
-  public Map<String, UserLoanDetails> handle(Map<String, UserLoanDetails> userLoanDetailsMap, String input) {
-    String inputString[] = input.split("\\s+");
-    String bank = inputString[1];
-    String user = inputString[2];
-    Integer principal = Integer.parseInt(inputString[3]);
-    Integer term = Integer.parseInt(inputString[4]);
-    Integer rateOfInterest = Integer.parseInt(inputString[5]);
+  public Map<String, UserLoanDetails> execute(Map<String, UserLoanDetails> userLoanDetailsMap, String input) {
+    String inputStrings[] = input.split("\\s+");
+    String bank = inputStrings[1];
+    String user = inputStrings[2];
+    Integer principal = Integer.parseInt(inputStrings[3]);
+    Integer term = Integer.parseInt(inputStrings[4]);
+    Integer rateOfInterest = Integer.parseInt(inputStrings[5]);
     String userBankIdentifier = bank + "_" + user;
     if(userLoanDetailsMap.containsKey(userBankIdentifier)) {
       System.out.println("Throw exception");
     }
 
-    Integer totalValue = calculateTotalValue(principal, term, rateOfInterest);
-    Integer emi = Math.toIntExact(Math.round(totalValue/(term*12.0)));
+    Integer totalValue = getTotalValue(principal, term, rateOfInterest);
+    Integer emiAmount = getEmiAmount(totalValue, term);
     LinkedHashMap<Integer, Integer> lumpSumTracker = new LinkedHashMap<>();
     UserLoanDetails userLoanDetails = new UserLoanDetails(bank,
         user,
@@ -27,7 +27,7 @@ public class Loan extends Command {
         term,
         rateOfInterest,
         totalValue,
-        emi,
+        emiAmount,
         lumpSumTracker
     );
 
@@ -36,7 +36,11 @@ public class Loan extends Command {
     return userLoanDetailsMap;
   }
 
-  public Integer calculateTotalValue(Integer principal, Integer term, Integer rateOfInterest) {
+  private int getEmiAmount(Integer totalValue, Integer term) {
+    return Math.toIntExact(Math.round(totalValue / (term*12.0)));
+  }
+
+  public Integer getTotalValue(Integer principal, Integer term, Integer rateOfInterest) {
     return Math.toIntExact(Math.round((principal*term*rateOfInterest)/100.0)) + principal;
   }
 }

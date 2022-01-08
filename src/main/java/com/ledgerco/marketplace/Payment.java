@@ -6,24 +6,22 @@ import java.util.Map;
 public class Payment extends Command {
 
   @Override
-  public Map<String, UserLoanDetails> handle(Map<String, UserLoanDetails> userLoanDetails, String input) {
-    String bank =  input.split("\\s+")[1];
-    String user =  input.split("\\s+")[2];
-    Integer lumpsum = Integer.parseInt(input.split("\\s+")[3]);
-    Integer emi = Integer.parseInt(input.split("\\s+")[4]);
+  public Map<String, UserLoanDetails> execute(Map<String, UserLoanDetails> userLoanDetailsMap, String input) {
+    String[] inputStrings = input.split("\\s+");
+    Integer lumpSum = Integer.parseInt(inputStrings[3]);
+    Integer emi = Integer.parseInt(inputStrings[4]);
 
-    String userBankIdentifier = bank + "_" + user;
+    String userBankIdentifier = UserLoanDetails.getUserBankIdentifier(inputStrings[1], inputStrings[2]);
 
-    UserLoanDetails userLoanDetails1 = userLoanDetails.get(userBankIdentifier);
-    Integer remainingTotal = userLoanDetails1.getRemainingTotalValue() - (emi * userLoanDetails1.getEmi() + lumpsum);
-    LinkedHashMap<Integer, Integer> lumpSumPaymentTracker = userLoanDetails1.getLumpSumPaymentTracker();
-    userLoanDetails1.setRemainingTotalValue(remainingTotal);
+    UserLoanDetails userLoanDetails = userLoanDetailsMap.get(userBankIdentifier);
+    Integer remainingAmount = userLoanDetails.getRemainingAmount() - (emi * userLoanDetails.getEmiAmount() + lumpSum);
+    LinkedHashMap<Integer, Integer> lumpSumPaymentTracker = userLoanDetails.getLumpSumPaymentTracker();
+    userLoanDetails.setRemainingAmount(remainingAmount);
     // TODO - no need of this ah?
-    lumpSumPaymentTracker.put(emi, remainingTotal);
-    userLoanDetails1.setLumpSumPaymentTracker(lumpSumPaymentTracker);
+    lumpSumPaymentTracker.put(emi, remainingAmount);
+    userLoanDetails.setLumpSumPaymentTracker(lumpSumPaymentTracker);
     // TODO - no need of this ah?
-    userLoanDetails.put(userBankIdentifier, userLoanDetails1);
-    System.out.println("userLoanDetails map is ---- " + userLoanDetails.entrySet());
-    return userLoanDetails;
+    userLoanDetailsMap.put(userBankIdentifier, userLoanDetails);
+    return userLoanDetailsMap;
   }
 }
