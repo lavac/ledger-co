@@ -16,7 +16,9 @@ public class TheLedgerCoApplication {
   public static void main(String[] args) {
     Map<String, UserLoanDetails> userLoanDetailsMap = new HashMap<>();
 
-    File file = new File("src/main/java/com/ledgerco/marketplace/data/inputData.csv");
+    Scanner scanner = new Scanner(System.in);
+    String filePath = scanner.next();
+    File file = new File(filePath);
     try {
       Scanner sc = new Scanner(file);
       while (sc.hasNext()) {
