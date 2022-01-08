@@ -16,8 +16,7 @@ public class TheLedgerCoApplication {
   public static void main(String[] args) {
     Map<String, UserLoanDetails> userLoanDetailsMap = new HashMap<>();
 
-    Scanner scanner = new Scanner(System.in);
-    String filePath = scanner.next();
+    String filePath = args[0];
     File file = new File(filePath);
     try {
       Scanner sc = new Scanner(file);
