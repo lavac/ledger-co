@@ -1,5 +1,11 @@
 package com.ledgerco.marketplace;
 
+import com.ledgerco.marketplace.exception.IllegalInputException;
+import com.ledgerco.marketplace.exception.InvalidInputCommandException;
+import com.ledgerco.marketplace.model.UserLoanDetails;
+import com.ledgerco.marketplace.service.Command;
+import com.ledgerco.marketplace.service.CommandFactory;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -10,7 +16,7 @@ public class TheLedgerCoApplication {
   public static void main(String[] args) {
     Map<String, UserLoanDetails> userLoanDetailsMap = new HashMap<>();
 
-    File file = new File("src/main/java/com/ledgerco/marketplace/inputData.csv");
+    File file = new File("src/main/java/com/ledgerco/marketplace/data/inputData.csv");
     try {
       Scanner sc = new Scanner(file);
       while (sc.hasNext()) {
@@ -20,7 +26,11 @@ public class TheLedgerCoApplication {
         userLoanDetailsMap = command.execute(userLoanDetailsMap, input);
       }
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
+      System.out.println("Input file not found");
+    } catch (IllegalInputException | InvalidInputCommandException exception) {
+      System.out.println(exception.getMessage());
+    } catch (Exception exception) {
+      System.out.println("Unexpected error occurred with message: " + exception.getMessage());
     }
   }
 }
